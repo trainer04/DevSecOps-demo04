@@ -89,7 +89,7 @@ pipeline {
                                             -v "$(pwd):/results" \\
                                 semgrep/semgrep:latest \\
                                 semgrep scan \\
-                                --config=\$(pwd)/\${env.SEMGREP_RULES_PATH} \\
+                                --config=\$(pwd)/${env.SEMGREP_RULES_PATH} \\
                                 --json \\
                                 --output=/results/SAST_reports/semgrep-report.json \\
                                 /src
@@ -99,7 +99,7 @@ pipeline {
                                             -v "$(pwd):/results" \\
                                 returntocorp/semgrep:latest \\
                                 semgrep scan \\
-                                --config=\$(pwd)/\${env.SEMGREP_RULES_PATH} \\
+                                --config=\$(pwd)/${env.SEMGREP_RULES_PATH} \\
                                 --text \\
                                 --output=/results/SAST_reports/semgrep-results.txt \\
                                 /src
