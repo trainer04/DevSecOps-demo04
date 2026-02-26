@@ -87,9 +87,10 @@ pipeline {
                             # Scanning source code (./src folder only)
                             docker run --rm -v "$(pwd)/src:/src:ro" \\
                                             -v "$(pwd):/results" \\
+                                            -v "$(pwd)/.semgrep-rules:/semgrep-rules:ro" \\
                                 semgrep/semgrep:latest \\
                                 semgrep scan \\
-                                --config=\$(pwd)/.semgrep-rules \\
+                                --config=/semgrep-rules \\
                                 --json \\
                                 --output=/results/SAST_reports/semgrep-report.json \\
                                 /src || true
@@ -97,9 +98,10 @@ pipeline {
                             # Scanning source code (./src folder only) - to create a human-readable output
                             docker run --rm -v "$(pwd)/src:/src:ro" \\
                                             -v "$(pwd):/results" \\
+                                            -v "$(pwd)/.semgrep-rules:/semgrep-rules:ro" \\
                                 returntocorp/semgrep:latest \\
                                 semgrep scan \\
-                                --config=\$(pwd)/.semgrep-rules \\
+                                --config=/semgrep-rules \\
                                 --text \\
                                 --output=/results/SAST_reports/semgrep-results.txt \\
                                 /src || true
