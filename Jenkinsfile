@@ -8,7 +8,7 @@ pipeline {
         // NO_PROXY_LIST = credentials('no-proxy-settings')
         
         // Path to local Semgrep rules
-        SEMGREP_RULES_PATH = '.semgrep-rules'
+        // SEMGREP_RULES_PATH = '.semgrep-rules'
         
         // NVD-key - if you do not have it, just specify the empty string as the secret text in Jenkins Credentials
         NVD_API_KEY = credentials('NVD-key')
@@ -89,7 +89,7 @@ pipeline {
                                             -v "$(pwd):/results" \\
                                 semgrep/semgrep:latest \\
                                 semgrep scan \\
-                                --config=\$(pwd)/${env.SEMGREP_RULES_PATH} \\
+                                --config=\$(pwd)/.semgrep-rules \\
                                 --json \\
                                 --output=/results/SAST_reports/semgrep-report.json \\
                                 /src
@@ -99,7 +99,7 @@ pipeline {
                                             -v "$(pwd):/results" \\
                                 returntocorp/semgrep:latest \\
                                 semgrep scan \\
-                                --config=\$(pwd)/${env.SEMGREP_RULES_PATH} \\
+                                --config=\$(pwd)/.semgrep-rules \\
                                 --text \\
                                 --output=/results/SAST_reports/semgrep-results.txt \\
                                 /src
