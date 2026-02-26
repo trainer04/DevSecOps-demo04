@@ -92,7 +92,7 @@ pipeline {
                                 --config=\$(pwd)/.semgrep-rules \\
                                 --json \\
                                 --output=/results/SAST_reports/semgrep-report.json \\
-                                /src
+                                /src || true
                             
                             # Scanning source code (./src folder only) - to create a human-readable output
                             docker run --rm -v "$(pwd)/src:/src:ro" \\
@@ -102,7 +102,7 @@ pipeline {
                                 --config=\$(pwd)/.semgrep-rules \\
                                 --text \\
                                 --output=/results/SAST_reports/semgrep-results.txt \\
-                                /src
+                                /src || true
                         '''
                         
                         // Checking JSON for findings count
