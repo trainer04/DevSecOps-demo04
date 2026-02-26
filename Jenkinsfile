@@ -3,12 +3,8 @@ pipeline {
     
     environment {
         
-        // Proxy settings (configured in Jenkins)
-        // PROXY_FOR_TOOLS = credentials('proxy-settings')
-        // NO_PROXY_LIST = credentials('no-proxy-settings')
-        
-        // Path to local Semgrep rules
-        // SEMGREP_RULES_PATH = '.semgrep-rules'
+        // To enable the SAST stage the value should be "true"
+        WITH_SAST = 'true'
         
         // NVD-key - if you do not have it, just specify the empty string as the secret text in Jenkins Credentials
         NVD_API_KEY = credentials('NVD-key')
@@ -32,26 +28,6 @@ pipeline {
     }
     
     stages {
-        // Step 0: Define variables - added this to illustrate, how to check if there are some parameter in the Jenkins Credentials store (the pipeline should work even if the 'with-sast' entity absents - so the SAST stage should be skipped)
-        stage('Define variables') {
-            steps {
-                script {
-                    try {
-                        withCredentials([string(credentialsId: 'with-sast', variable: 'WITH_SAST_VALUE')]) {
-                            env.WITH_SAST = WITH_SAST_VALUE
-                            echo "✅ WITH_SAST value has been provided successfuly"
-                        }
-                        
-                        echo "WITH_SAST = ${env.WITH_SAST}"
-                        
-                    } catch (Exception e) {
-                        echo "⚠️ WITH_SAST value has not been provided"
-                        env.WITH_SAST = ''
-                    }
-                }
-            }
-        }
-        
         // Step 1: Getting code from repository
         stage('Checkout Code') {
             steps {
