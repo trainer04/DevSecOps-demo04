@@ -4,8 +4,11 @@ pipeline {
     environment {
         
         // Proxy settings (configured in Jenkins)
-        PROXY_FOR_TOOLS = credentials('proxy-settings')
-        NO_PROXY_LIST = credentials('no-proxy-settings')
+        // PROXY_FOR_TOOLS = credentials('proxy-settings')
+        // NO_PROXY_LIST = credentials('no-proxy-settings')
+        
+        // Path to local Semgrep rules
+        SEMGREP_RULES_PATH = '.semgrep-rules'
         
         // NVD-key - if you do not have it, just specify the empty string as the secret text in Jenkins Credentials
         NVD_API_KEY = credentials('NVD-key')
@@ -84,12 +87,9 @@ pipeline {
                             # Scanning source code (./src folder only)
                             docker run --rm -v "$(pwd)/src:/src:ro" \\
                                             -v "$(pwd):/results" \\
-                                -e HTTP_PROXY="${PROXY_FOR_TOOLS}" \\
-                                -e HTTPS_PROXY="${PROXY_FOR_TOOLS}" \\
-                                -e NO_PROXY="${NO_PROXY_LIST}" \\
                                 semgrep/semgrep:latest \\
                                 semgrep scan \\
-                                --config=auto \\
+                                --config=/${env.SEMGREP_RULES_PATH} \\
                                 --json \\
                                 --output=/results/SAST_reports/semgrep-report.json \\
                                 /src
@@ -97,12 +97,9 @@ pipeline {
                             # Scanning source code (./src folder only) - to create a human-readable output
                             docker run --rm -v "$(pwd)/src:/src:ro" \\
                                             -v "$(pwd):/results" \\
-                                -e HTTP_PROXY="${PROXY_FOR_TOOLS}" \\
-                                -e HTTPS_PROXY="${PROXY_FOR_TOOLS}" \\
-                                -e NO_PROXY="${NO_PROXY_LIST}" \\
                                 returntocorp/semgrep:latest \\
                                 semgrep scan \\
-                                --config=auto \\
+                                --config=/${env.SEMGREP_RULES_PATH} \\
                                 --text \\
                                 --output=/results/SAST_reports/semgrep-results.txt \\
                                 /src
