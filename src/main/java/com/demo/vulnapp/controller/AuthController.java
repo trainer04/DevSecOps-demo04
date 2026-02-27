@@ -84,7 +84,7 @@ public class AuthController {
         // VULN: Command injection through email parameter
         try {
             String command = "echo 'Password reset for: " + email + "' | mail -s 'Password Reset' " + email;
-            Runtime.getRuntime().exec(command);
+            //Runtime.getRuntime().exec(command);
         } catch (Exception e) {
             e.printStackTrace();
         }
