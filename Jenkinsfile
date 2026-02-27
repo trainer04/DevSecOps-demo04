@@ -90,10 +90,10 @@ pipeline {
                             # Sending scan resoults to Vampy ASPM
                             echo "=== Sending Semgrep SAST Scan resoults to ASOC (Vampy ASPM) ==="
                             
-                            curl -X POST "http://${env.VAMPY_URL}/api/ext/v1/scan_uploads/" \\
+                            curl -X POST "http://\${env.VAMPY_URL}/api/ext/v1/scan_uploads/" \\
                                 -H "accept: */*" \\
                                 -H "Content-Type: multipart/form-data" \\
-                                -H "Authentication: ${env.VAMPY_TKN}" \\
+                                -H "Authentication: \${env.VAMPY_TKN}" \\
                                 -F "repository=demo04" \\
                                 -F "repositoryBranch=main" \\
                                 -F "scannerResultFile=@SAST_reports/semgrep-report.json" \\
