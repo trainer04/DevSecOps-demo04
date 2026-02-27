@@ -25,6 +25,11 @@ pipeline {
         BUILD_TAG = "${APP_NAME}:${BUILD_NUMBER}"
         REGISTRY_TAG = "${REGISTRY_HOST}/${APP_NAME}:${BUILD_NUMBER}"
         REGISTRY_LATEST = "${REGISTRY_HOST}/${APP_NAME}:latest"
+        
+        // Hexway Vampy ASPM settings
+        VAMPY_URL = credentials('vampy-url')
+        VAMPY_TKN = credentials('vampy-tkn')
+        
     }
     
     stages {
@@ -81,6 +86,18 @@ pipeline {
                                 --text \\
                                 --output=/results/SAST_reports/semgrep-results.txt \\
                                 /src || true
+                            
+                            # Sending scan resoults to Vampy ASPM
+                            echo "=== Sending Semgrep SAST Scan resoults to ASOC (Vampy ASPM) ==="
+                            
+                            curl -X POST "http://${env.VAMPY_URL}/api/ext/v1/scan_uploads/" \\
+                                -H "accept: */*" \\
+                                -H "Content-Type: multipart/form-data" \\
+                                -H "Authentication: ${env.VAMPY_TKN}" \\
+                                -F "repository=demo04" \\
+                                -F "repositoryBranch=main" \\
+                                -F "scannerResultFile=@SAST_reports/semgrep-report.json" \\
+                                -F "scannerType=SEMGREP"
                         '''
                         
                         // Checking JSON for findings count
